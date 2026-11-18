@@ -64,7 +64,7 @@ a{color:inherit}
 <div id="sky"></div><div id="toast"></div><div id="modal" onclick="this.classList.remove('on')"><div class="card" id="mbody"></div></div>
 <main>
 <div class="hero"><div class="logo">🌙</div><div><h1>Moonpetal Hollow</h1><small id="date"></small></div></div>
-<nav class="top"><button class="on" onclick="tab(0)">🏰<br>Home</button><button onclick="tab(1)">💐<br>Bouquets</button><button onclick="tab(2)">🎁<br>Rewards</button><button onclick="tab(3)">✉️<br>Inn</button></nav>
+<nav class="top"><button class="on" onclick="tab(0)">🏰<br>Home</button><button onclick="tab(1)">💐<br>Bouquets</button><button onclick="tab(2)">🎁<br>Rewards</button><button onclick="tab(3)">✉️<br>Inn</button><button onclick="tab(4)">📖<br>Lore</button></nav>
 
 <section class="tab on" id="t0">
 <div class="glass"><h2 class="cz" id="greet" style="color:var(--gold);font-size:19px"></h2>
@@ -102,6 +102,12 @@ a{color:inherit}
 <div class="glass"><h2 class="cz">🏮 The Cozy Inn</h2><p style="margin:6px 0 0">Someone left messages for you. Tap to read.</p></div>
 <div id="letters"></div>
 </section>
+
+<section class="tab" id="t4">
+<div class="glass"><h2 class="cz">📖 Today in the Hollow</h2><p id="chron" style="margin:6px 0 0"></p></div>
+<div class="card"><h2>🏮 Residents of the Hollow</h2><div class="grid" id="cast"></div></div>
+<div id="chap"></div>
+</section>
 </main>
 
 <script>
@@ -126,9 +132,28 @@ const R=[
 const SK=[["🍳","Cooking"],["🎣","Fishing"],["⛏️","Mining"]];
 const ACH=[["First Quest",s=>s.done>=1],["Nibble Nemesis",s=>s.urges>=5],["Three Day Guardian",s=>s.streak>=3],["Week of Wonders",s=>s.streak>=7],["Quest Master",s=>s.done>=25],["Bloom Collector",s=>s.inv.length>=3],["Level 5 Hero",s=>lvl(s.xp)>=5]];
 const MILES=[[1,"Day 1: the goblin trembles"],[3,"3 days: nails sparkling"],[7,"A full week! Legendary"],[14,"Two weeks: hands of a queen"],[30,"30 days: mythic manicure"]];
+// ===== EDIT ME: starting quests (name, XP) =====
+const START_QUESTS=[['Drink some water',10],['Stretch like a cat',10],['Eat something nourishing',20],['Do one small thing for future you',20]];
+// ===== EDIT ME: story chapters, one unlocks per level =====
+const LORE=[
+['The Hollow Wakes','Long ago, a tiny village slipped off the map and settled beneath the moon. Moonpetal Hollow only appears to heroes who have been carrying too much. Tonight, it appeared to you.'],
+['The Innkeeper’s Fire','Marigold keeps a fire burning in the Cozy Inn that never runs out of wood. Nobody has ever seen her gather any. She says the fire only needs one thing: someone worth keeping warm.'],
+['The Nail Goblin','Deep in the thicket lives Nibblax, a small and very dramatic goblin who feeds on nervous habits. He is not evil, only hungry. Each urge you resist makes him a little smaller and a little more embarrassed.'],
+['The Wanderer’s Wares','Fenwick arrives with a cart of impossible goods: bottled sunshine, quiet afternoons, a pocketful of second chances. He never charges coins. He only asks you to tell him one good thing from your day.'],
+['The Gilded Hall','Past the lanterns stands a hall whose walls glow like beaten gold. In its mosaic, two figures lean into a kiss, wrapped in spirals and flowers. Travelers say it only opens for someone astonishingly beautiful.'],
+['The Moonpetal Tree','At the center of the Hollow grows a tree whose blossoms open only at night. Every bouquet you collect leaves a petal in its branches. By morning, the tree has grown a little taller.'],
+['Pip’s Secret','Pip was not always a fox. Pip was the first spark of Marigold’s fire, who wanted a closer look at the hero who needed it most. The spark chose paws, a tail, and an unreasonable amount of fluff.'],
+['The Heart of the Hollow','The villagers have a saying: the Hollow was never built for the map. It was built for the one who would finally rest in it. The lanterns are lit, the fire is warm, and the door has always been open.']];
+// ===== EDIT ME: residents (emoji, name, daily lines, level they arrive) =====
+const CAST=[
+['🧙','Marigold the Innkeeper',['Marigold left a warm bowl of stew by the fire for you.','Marigold says the fire burns brighter when you are near.','Marigold polished your favorite mug. Yes, you have a favorite.'],1],
+['🎒','Fenwick the Wanderer',['Fenwick is selling bottled sunshine today. He gave you a sample.','Fenwick traded a button for a joke. He says it was fair.','Fenwick swears he saw the moon wink at you.'],3],
+['🌫️','The Stranger in the Cloak',['The Stranger left a single golden leaf on your table.','The Stranger watched from the corner, smiling, and left before you noticed.','The Stranger is rumored to be very fond of you.'],5]];
+// ===== EDIT ME: one tale per day, cycling =====
+const DAILY=['Today the Hollow smells like cinnamon and rain on stone.','Nibblax was seen sulking behind a mushroom. He lost another round yesterday.','A glowing moth landed on the inn’s sign and refused to leave.','The Moonpetal Tree dropped a petal on the doorstep. It looks like it was meant for you.','Marigold hung fresh lanterns in your honor. She says it is a coincidence.','Pip spent the morning chasing a sunbeam and lost with great dignity.','A soft wind carried a melody from the Gilded Hall. Nobody could name the song.','The villagers held a small meeting about how well you are doing. It was unanimous.'];
 const $=id=>document.getElementById(id);
 const key="moonpetal-v2";
-let S={xp:0,done:0,urges:0,best:0,start:today(),tasks:[{t:"Drink some water",x:10,d:0},{t:"Do one small thing for future you",x:20,d:0}],inv:[],letters:[],lastDay:today(),found:0};
+let S={xp:0,done:0,urges:0,best:0,start:today(),tasks:START_QUESTS.map(q=>({t:q[0],x:q[1],d:0})),inv:[],letters:[],lastDay:today(),found:0};
 try{const l=JSON.parse(localStorage.getItem(key));if(l)S=l}catch(e){}
 function save(){try{localStorage.setItem(key,JSON.stringify(S))}catch(e){}}
 function today(){return new Date().toDateString()}
@@ -139,7 +164,7 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3200)}
 function fx(list,n=14){for(let i=0;i<n;i++){const e=document.createElement("div");e.className="fx";e.textContent=pick(list);e.style.left=(20+Math.random()*60)+"vw";e.style.top="55vh";e.style.setProperty("--x",(Math.random()*200-100)+"px");e.style.setProperty("--y",(-100-Math.random()*300)+"px");document.body.appendChild(e);setTimeout(()=>e.remove(),1700)}}
 function modal(h){$("mbody").innerHTML=h;$("modal").classList.add("on")}
-function gain(x,msg){const a=lvl(S.xp);S.xp+=x;const b=lvl(S.xp);save();render();toast(msg||`+${x} XP`);if(b>a){fx(["⭐","✨","🎉"],24);setTimeout(()=>modal(`<div style="font-size:60px">🎊</div><h2>LEVEL UP!</h2><p>You reached Level ${b}. New rewards may be waiting in the Treasure Hall.</p>`),500)}}
+function gain(x,msg){const a=lvl(S.xp);S.xp+=x;const b=lvl(S.xp);save();render();toast(msg||`+${x} XP`);if(b>a){fx(["⭐","✨","🎉"],24);setTimeout(()=>modal(`<div style="font-size:60px">🎊</div><h2>LEVEL UP!</h2><p>You reached Level ${b}. New rewards and a new Lore chapter are waiting.</p>`),500)}}
 function tab(i){document.querySelectorAll(".tab").forEach((t,j)=>t.classList.toggle("on",i==j));document.querySelectorAll("nav.top button").forEach((x,j)=>x.classList.toggle("on",j==i));scrollTo(0,0)}
 function resist(){S.urges++;gain(10,pick(GOBLIN));fx(["🛡️","✨","💪"],8)}
 function almost(){S.urges++;gain(5,pick(ALMOST))}
@@ -164,7 +189,12 @@ function render(){
  R.forEach((g,gi)=>$("r"+gi).innerHTML=g.map(r=>`<div class="item ${lvl(S.xp)<r[2]?"lock":""}"><span class="big">${r[0]}</span>${r[1]}<br><small>${lvl(S.xp)<r[2]?"Unlocks Lv "+r[2]:"Owned!"}</small></div>`).join(""));
  $("skills").innerHTML=SK.map((s,i)=>{const v=1+Math.floor((S.done+S.urges)/(3+i*2));return`<div class="row sp" style="margin:4px 0"><span>${s[0]} ${s[1]}</span><b>Lv ${v}</b></div>`}).join("");
  $("ach").innerHTML=ACH.map(a=>`<div class="item ${a[1]({...S,streak:d})?"":"lock"}" style="margin:5px 0;text-align:left">${a[1]({...S,streak:d})?"🏅":"🔒"} ${a[0]}</div>`).join("");
+ renderLore();
  $("letters").innerHTML=NOTES.map((n,i)=>`<div class="letter card" onclick="rd(${i},this)" style="color:var(--ink)">${S.letters.includes(i)?`<div><b>${n[0]}</b><p>${n[1]}</p></div>`:`<span style="font-size:30px">✉️</span><b>${n[0]}</b>`}</div>`).join("")}
+function renderLore(){const L=lvl(S.xp),dd=new Date(),doy=Math.floor((dd-new Date(dd.getFullYear(),0,0))/864e5);
+ $('chron').textContent=DAILY[doy%DAILY.length];
+ $('cast').innerHTML=CAST.map(c=>{const o=L>=c[3];return `<div class="item ${o?'':'lock'}" style="text-align:left"><span class="big" style="font-size:34px">${c[0]}</span><b>${c[1]}</b><br><small>${o?c[2][doy%c[2].length]:'Arrives at Level '+c[3]}</small></div>`}).join('');
+ $('chap').innerHTML=LORE.map((c,i)=>{const o=L>=i+1;return `<div class="card" style="${o?'':'opacity:.5'}"><h2>${o?'📖':'🔒'} Chapter ${i+1}: ${o?c[0]:'Unlocks at Level '+(i+1)}</h2>${o?`<p style="margin:0;line-height:1.5">${c[1]}</p>`:''}</div>`}).join('')}
 function rd(i,el){if(!S.letters.includes(i)){S.letters.push(i);save();fx(["💌","✨"],8);gain(5,"Message unlocked +5 XP")}render()}
 function shareDay(){const d=days(),q=S.tasks.filter(t=>t.d).length,l=lvl(S.xp);
  const txt=`Moonpetal Hollow report 🌙\nLevel ${l} hero (${S.xp} XP)\nQuests done today: ${q}/${S.tasks.length}\nNail streak: ${d} day${d==1?"":"s"} (best ${Math.max(S.best,d)})\nUrges resisted: ${S.urges}\nLetters opened: ${S.letters.length}/${NOTES.length}`;
