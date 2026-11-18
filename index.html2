@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Zack’s Moonpetal Hollow</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Moonpetal Hollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#2a1f4d;--bg2:#4a2f6e;--card:#fff3dc;--ink:#4b3358;--rose:#e87a9f;--gold:#f5c86a;--mint:#7ad6b0;box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#fff;background:radial-gradient(circle at 20% 0,#6b3f8f 0,transparent 50%),radial-gradient(circle at 90% 30%,#3a5a8f 0,transparent 45%),linear-gradient(var(--bg),#1b1436);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.cz{font-family:Cinzel,Georgia,serif;margin:0}
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:tw 3s infinite ease-in-out}
+@keyframes tw{50%{opacity:.2;transform:scale(.6)}}
+main{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:14px 14px 90px}
+.hero{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.logo{font-size:34px;filter:drop-shadow(0 0 8px var(--gold))}
+.hero h1{font-size:21px;color:var(--gold)}.hero small{opacity:.8;display:block}
+.card{background:var(--card);color:var(--ink);border-radius:18px;padding:14px;margin:12px 0;border:3px solid #d9b26b;box-shadow:0 6px 0 #a67c3a55,0 0 22px #f5c86a22;position:relative}
+.card h2{font-size:17px;margin-bottom:8px;color:#7a3f7f}
+.glass{background:#ffffff14;border:2px solid #ffffff30;border-radius:18px;padding:14px;margin:12px 0;backdrop-filter:blur(4px)}
+.bar{height:16px;background:#0003;border-radius:99px;overflow:hidden;border:2px solid #d9b26b}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .6s cubic-bezier(.2,1.4,.4,1)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:var(--rose);color:#fff;box-shadow:0 3px 0 #a94868;touch-action:manipulation;transition:transform .1s}
+button:active{transform:translateY(3px);box-shadow:none}
+button.alt{background:#7a6bd6;box-shadow:0 3px 0 #4b3fa0}button.gold{background:var(--gold);color:#5a3a10;box-shadow:0 3px 0 #b08a30}button.mint{background:var(--mint);color:#134b36;box-shadow:0 3px 0 #3f9d7c}
+input,select{font:inherit;padding:10px;border-radius:10px;border:2px solid #d9b26b;background:#fff;color:var(--ink);min-width:0}
+.pet{font-size:64px;display:inline-block;animation:bob 2.4s infinite ease-in-out;cursor:pointer;user-select:none}
+@keyframes bob{50%{transform:translateY(-8px) rotate(3deg)}}
+.pet.hop{animation:hop .6s}@keyframes hop{40%{transform:translateY(-30px) scale(1.2)}}
+.bubble{background:#fff;color:var(--ink);border-radius:14px;padding:8px 12px;flex:1;font-size:14px;min-width:150px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stat{background:#fff;border-radius:12px;padding:8px 4px}.stat b{display:block;font-size:22px;color:#c24f7a}.stat span{font-size:11px}
+.hand{display:flex;gap:6px;justify-content:center;align-items:flex-end;height:90px;margin:8px 0}
+.nail{width:36px;background:#ffd9c8;border-radius:16px 16px 8px 8px;position:relative;border:2px solid #e8a98f;transition:height .8s}
+.nail:after{content:"";position:absolute;left:5px;right:5px;top:0;height:var(--n,10px);background:#ffc0d4;border-radius:10px 10px 4px 4px;transition:height .8s}
+.task{display:flex;align-items:center;gap:10px;padding:10px;background:#fff;border-radius:12px;margin:6px 0;transition:.3s}
+.task.done{opacity:.55;text-decoration:line-through;background:#e9ffe9}
+.task.pop{animation:pop .5s}@keyframes pop{40%{transform:scale(1.06);box-shadow:0 0 20px var(--gold)}}
+.chk{width:28px;height:28px;border-radius:50%;border:3px solid #d9b26b;background:#fff;padding:0;box-shadow:none;color:#fff;font-size:16px}
+.done .chk{background:var(--mint);border-color:var(--mint)}
+.xpb{margin-left:auto;font-size:12px;font-weight:800;color:#c24f7a;white-space:nowrap}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;background:#1b1436ee;border-top:3px solid #d9b26b;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border-radius:0;background:none;box-shadow:none;padding:12px 2px;font-size:12px;color:#fff9}
+nav button.on{color:var(--gold);background:#ffffff14}
+.tab{display:none}.tab.on{display:block;animation:fade .4s}@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.item{background:#fff;border-radius:14px;padding:10px;text-align:center;font-size:13px}
+.item .big{font-size:42px;display:block}.lock{filter:grayscale(1);opacity:.45}
+.bq{font-size:44px;animation:sway 3s infinite ease-in-out;display:block}@keyframes sway{50%{transform:rotate(-5deg) scale(1.05)}}
+.glow{animation:glow 2s infinite}@keyframes glow{50%{filter:drop-shadow(0 0 12px var(--gold))}}
+.letter{cursor:pointer;display:flex;gap:10px;align-items:center;background:#fff;padding:12px;border-radius:12px;margin:8px 0}
+.letter.open{background:#fff8d6;display:block}
+#toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translate(-50%,-150%);background:var(--card);color:var(--ink);border:3px solid var(--gold);border-radius:16px;padding:12px 16px;z-index:20;max-width:90vw;text-align:center;transition:transform .4s cubic-bezier(.2,1.5,.4,1);font-weight:700}
+#toast.show{transform:translate(-50%,0)}
+.fx{position:fixed;z-index:15;pointer-events:none;font-size:26px;animation:fly 1.6s forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(360deg);opacity:0}}
+#modal{position:fixed;inset:0;background:#000a;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
+#modal.on{display:flex}#modal .card{max-width:380px;text-align:center;animation:pop .5s}
+.secret{position:fixed;font-size:22px;z-index:4;cursor:pointer;animation:tw 2s infinite}
+nav:not(.top){display:none}nav.top{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;left:auto;right:auto;border:3px solid #d9b26b;border-radius:16px;overflow:hidden;padding:0;margin:0 0 6px}nav.top button{padding:8px 2px;font-size:12px}
+a{color:inherit}
+</style></head><body>
+<div id="sky"></div><div id="toast"></div><div id="modal" onclick="this.classList.remove('on')"><div class="card" id="mbody"></div></div>
+<main>
+<div class="hero"><div class="logo">🌙</div><div><h1>Moonpetal Hollow</h1><small id="date"></small></div></div>
+<nav class="top"><button class="on" onclick="tab(0)">🏰<br>Home</button><button onclick="tab(1)">💐<br>Bouquets</button><button onclick="tab(2)">🎁<br>Rewards</button><button onclick="tab(3)">✉️<br>Inn</button></nav>
+
+<section class="tab on" id="t0">
+<div class="glass"><h2 class="cz" id="greet" style="color:var(--gold);font-size:19px"></h2>
+<p id="daily" style="margin:6px 0 0"></p></div>
+<div class="card"><div class="row sp"><h2>⚔️ Hero Level <span id="lv">1</span></h2><span id="xptxt" style="font-size:13px"></span></div>
+<div class="bar"><i id="xpbar"></i></div>
+<div class="row" style="margin-top:10px"><span class="pet" id="pet" onclick="pet()">🦊</span><div class="bubble" id="pbub">Pip the Hearthfox is thrilled you’re here.</div></div></div>
+
+<div class="card"><h2>💅 Nail Sanctuary</h2>
+<div class="stats"><div class="stat"><b id="streak">0</b><span>days protected</span></div><div class="stat"><b id="best">0</b><span>best streak</span></div><div class="stat"><b id="urges">0</b><span>urges resisted</span></div></div>
+<div class="hand" id="hand"></div>
+<p id="mile" style="text-align:center;font-size:13px;margin:0 0 10px"></p>
+<div class="row"><button class="mint" onclick="resist()">🛡️ I resisted!</button><button class="alt" onclick="almost()">😅 I almost bit them</button><button class="gold" onclick="bit()">🌱 Fresh start</button></div></div>
+
+<div class="card"><h2>📜 Today’s Quests</h2><div id="tasks"></div>
+<div class="row" style="margin-top:8px"><input id="tin" placeholder="New quest (e.g. Do laundry)" style="flex:1"><select id="txp"><option value="10">+10</option><option value="20" selected>+20</option><option value="30">+30</option></select><button onclick="addT()">Add</button></div></div>
+<div class="card"><h2>💌 Send a Raven</h2><p style="margin:0 0 10px;font-size:14px">Want to tell someone how your day went? Tap below to send a little progress report.</p><button class="alt" onclick="shareDay()">🕊️ Share my day</button></div>
+</section>
+
+<section class="tab" id="t1">
+<div class="glass"><h2 class="cz">🌸 Bouquet Shop</h2><p style="margin:6px 0 0">Pick a bouquet and it will be tucked in your inventory forever. Level 5 unlocks a secret bloom.</p></div>
+<div class="grid" id="shop"></div>
+<div class="card" style="margin-top:16px"><h2>🎒 Bouquet Inventory</h2><div class="grid" id="inv"></div></div>
+</section>
+
+<section class="tab" id="t2">
+<div class="glass"><h2 class="cz">🏆 Treasure Hall</h2><p style="margin:6px 0 0">Original rewards inspired by classic fantasy worlds. Level up and finish quests to unlock more. Chests can drop after quests.</p></div>
+<div class="card"><h2>🐴 Mounts and Pets (Realm Rewards)</h2><div class="grid" id="r0"></div></div>
+<div class="card"><h2>🏅 Champion Badges and Emotes</h2><div class="grid" id="r1"></div></div>
+<div class="card"><h2>⛏️ Skills and Item Drops</h2><div id="skills"></div><div class="grid" id="r2" style="margin-top:8px"></div></div>
+<div class="card"><h2>✨ Achievements</h2><div id="ach"></div></div>
+</section>
+
+<section class="tab" id="t3">
+<div class="glass"><h2 class="cz">🏮 The Cozy Inn</h2><p style="margin:6px 0 0">Someone left messages for you. Tap to read.</p></div>
+<div id="letters"></div>
+</section>
+</main>
+
+<script>
+// ===== EDIT ME: name and love notes =====
+const NAME="Zack";
+const NOTES=[
+["A gilded letter has arrived","Zack, you are as beautiful as The Kiss by Klimt: all gold, all warmth, and impossible to look away from."],["A mysterious letter has arrived","You are doing better than you think. I’m proud of you, always."],
+["Someone left a message at the inn","Your laugh is my favorite sound in any realm."],
+["You found something in your inventory","A coupon for one very long hug. No expiration date."],
+["A raven delivered this","Hard day? You still showed up. That’s legendary."],
+["Tucked inside a glowing bottle","Plot twist: you are the main character and the best support class."],
+["A pressed flower fell out of a book","For absolutely no reason other than you being you."]];
+const MSGS=["Today’s side quest: be gentle with yourself.","Small steps still count as XP.","You are the rare drop of my whole life.","Hydrate, hero. Your health bar thanks you.","Critical hit of kindness incoming: you’re wonderful.","Even the strongest mages take rest breaks."];
+const GOBLIN=["Hands detected approaching the mouth. Deploying emotional support.","The nail goblin has been defeated.","+10 XP for resisting the forbidden nibble.","The urge was strong. You were stronger.","Nail goblin retreats, muttering about unfair odds.","A wild craving appeared! It used Nibble. It missed!"];
+const ALMOST=["Close call! Effort counts. +5 XP for noticing.","Hand intercepted mid-air. Excellent reflexes.","Almost is progress. The goblin is nervous."];
+const PETS=["Pip nuzzles your hand. Cozy.","Pip found a shiny button and gave it to you.","Pip believes in you at 110%.","Pip does a tiny victory dance."];
+const BQ=[["🌹🌹🌹","Rose Bouquet","I’m proud of you",1],["🌻🌻🌻","Sunbeam Sunflowers","You survived a hard day",1],["🌼🌷🌸","Wildflower Meadow","You deserve something pretty",1],["🔮🌺🔮","Arcane Bloom","For absolutely no reason other than you being you",1],["🍂🌸🍁","Seasonal Posy","Every season I pick you",1],["✨🪻✨","Moonpetal Crown","You are my rarest treasure",5]];
+const R=[
+[["🦌","Starlit Stag Mount",2],["🐉","Tiny Ember Drake",4],["🦄","Moonmane Unicorn",7],["🐺","Frostpaw Pup",10]],
+[["🛡️","Champion of Naps",2],["😎","Emote: Smug Sip",3],["⚡","Ability: Sparkle Dash",6],["👑","Victory Screen: Crowned",9]],
+[["🐟","Golden Trout",1],["💎","Raw Moongem",3],["🍲","Hearty Stew",5],["📦","Rune Satchel",8]]];
+const SK=[["🍳","Cooking"],["🎣","Fishing"],["⛏️","Mining"]];
+const ACH=[["First Quest",s=>s.done>=1],["Nibble Nemesis",s=>s.urges>=5],["Three Day Guardian",s=>s.streak>=3],["Week of Wonders",s=>s.streak>=7],["Quest Master",s=>s.done>=25],["Bloom Collector",s=>s.inv.length>=3],["Level 5 Hero",s=>lvl(s.xp)>=5]];
+const MILES=[[1,"Day 1: the goblin trembles"],[3,"3 days: nails sparkling"],[7,"A full week! Legendary"],[14,"Two weeks: hands of a queen"],[30,"30 days: mythic manicure"]];
+const $=id=>document.getElementById(id);
+const key="moonpetal-v2";
+let S={xp:0,done:0,urges:0,best:0,start:today(),tasks:[{t:"Drink some water",x:10,d:0},{t:"Do one small thing for future you",x:20,d:0}],inv:[],letters:[],lastDay:today(),found:0};
+try{const l=JSON.parse(localStorage.getItem(key));if(l)S=l}catch(e){}
+function save(){try{localStorage.setItem(key,JSON.stringify(S))}catch(e){}}
+function today(){return new Date().toDateString()}
+function days(){return Math.max(0,Math.floor((new Date(today())-new Date(S.start))/864e5))}
+function lvl(x){let l=1,n=100;while(x>=n){x-=n;l++;n=100+(l-1)*50}return l}
+function prog(){let x=S.xp,l=1,n=100;while(x>=n){x-=n;l++;n=100+(l-1)*50}return[x,n]}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3200)}
+function fx(list,n=14){for(let i=0;i<n;i++){const e=document.createElement("div");e.className="fx";e.textContent=pick(list);e.style.left=(20+Math.random()*60)+"vw";e.style.top="55vh";e.style.setProperty("--x",(Math.random()*200-100)+"px");e.style.setProperty("--y",(-100-Math.random()*300)+"px");document.body.appendChild(e);setTimeout(()=>e.remove(),1700)}}
+function modal(h){$("mbody").innerHTML=h;$("modal").classList.add("on")}
+function gain(x,msg){const a=lvl(S.xp);S.xp+=x;const b=lvl(S.xp);save();render();toast(msg||`+${x} XP`);if(b>a){fx(["⭐","✨","🎉"],24);setTimeout(()=>modal(`<div style="font-size:60px">🎊</div><h2>LEVEL UP!</h2><p>You reached Level ${b}. New rewards may be waiting in the Treasure Hall.</p>`),500)}}
+function tab(i){document.querySelectorAll(".tab").forEach((t,j)=>t.classList.toggle("on",i==j));document.querySelectorAll("nav.top button").forEach((x,j)=>x.classList.toggle("on",j==i));scrollTo(0,0)}
+function resist(){S.urges++;gain(10,pick(GOBLIN));fx(["🛡️","✨","💪"],8)}
+function almost(){S.urges++;gain(5,pick(ALMOST))}
+function bit(){S.best=Math.max(S.best,days());S.start=today();save();render();toast("Every hero has setbacks. Fresh start, fresh XP, no judgment. 💗")}
+function addT(){const v=$("tin").value.trim();if(!v)return;S.tasks.push({t:v,x:+$("txp").value,d:0});$("tin").value="";save();render()}
+function tog(i){const t=S.tasks[i];if(t.d)return;t.d=1;S.done++;save();gain(t.x,`Quest complete! +${t.x} XP`);fx(["✨","⭐","💖"],10);
+ if(S.tasks.every(x=>x.d)){setTimeout(()=>{fx(["🎉","🌸","⭐","💐"],30);modal('<div style="font-size:60px">🏆</div><h2>All Quests Complete!</h2><p>Critical success! Today’s tasks are all done. Go enjoy a snack, hero.</p>')},400);gain(25,"Daily bonus +25 XP")}
+ else if(Math.random()<.3)chest();
+ document.querySelectorAll(".task")[i]?.classList.add("pop")}
+function del(i){S.tasks.splice(i,1);save();render()}
+function chest(){const all=R.flat().filter(r=>lvl(S.xp)>=r[2]);const rare=Math.random()<.15;setTimeout(()=>modal(`<div class="bq glow" style="font-size:64px">🧰</div><h2>${rare?"RARE ":""}Treasure Chest!</h2><p>${rare?"A legendary find: ":"Inside: "}${rare?"✨ ":""}${pick(all)[1]}. Check the Treasure Hall.</p>`),700)}
+function pet(){const p=$("pet");p.classList.remove("hop");void p.offsetWidth;p.classList.add("hop");$("pbub").textContent=pick(PETS);if(Math.random()<.12){gain(15,"Pip found a rare item! +15 XP");fx(["💎"],6)}}
+function giveBq(i){const b=BQ[i];if(lvl(S.xp)<b[3])return toast("Reach Level "+b[3]+" to unlock this bloom 🔒");S.inv.push(i);save();fx(b[0].match(/./gu),16);modal(`<span class="bq" style="font-size:70px">${b[0]}</span><h2>${b[1]}</h2><p>“${b[2]}.”</p><small>Saved to your inventory</small>`);render()}
+function render(){
+ const d=days();$("streak").textContent=d;$("best").textContent=Math.max(S.best,d);$("urges").textContent=S.urges;
+ const[x,n]=prog();$("lv").textContent=lvl(S.xp);$("xptxt").textContent=x+" / "+n+" XP";$("xpbar").style.width=(x/n*100)+"%";
+ $("hand").innerHTML=[0.55,0.75,0.85,0.75,0.6].map(f=>`<div class="nail" style="height:${50+f*30}px;--n:${Math.min(26,6+d*1.5)}px"></div>`).join("");
+ const m=[...MILES].reverse().find(m=>d>=m[0]);$("mile").textContent=m?"🌟 "+m[1]:"Day 0: a new adventure begins";
+ $("tasks").innerHTML=S.tasks.map((t,i)=>`<div class="task ${t.d?"done":""}"><button class="chk" onclick="tog(${i})">${t.d?"✓":""}</button><span>${t.t.replace(/</g,"&lt;")}</span><span class="xpb">+${t.x} XP</span><button style="padding:2px 8px;background:none;color:#b98;box-shadow:none" onclick="del(${i})">×</button></div>`).join("")||"<i>No quests yet. Add one below!</i>";
+ $("shop").innerHTML=BQ.map((b,i)=>`<div class="item ${lvl(S.xp)<b[3]?"lock":""}"><span class="bq">${b[0]}</span><b>${b[1]}</b><br><small>${b[2]}</small><br><button style="margin-top:6px" onclick="giveBq(${i})">${lvl(S.xp)<b[3]?"🔒 Lv "+b[3]:"Take it"}</button></div>`).join("");
+ $("inv").innerHTML=S.inv.length?S.inv.map(i=>`<div class="item"><span class="bq" style="font-size:34px;animation:none">${BQ[i][0]}</span><small>${BQ[i][2]}</small></div>`).join(""):"<i>Empty for now.</i>";
+ R.forEach((g,gi)=>$("r"+gi).innerHTML=g.map(r=>`<div class="item ${lvl(S.xp)<r[2]?"lock":""}"><span class="big">${r[0]}</span>${r[1]}<br><small>${lvl(S.xp)<r[2]?"Unlocks Lv "+r[2]:"Owned!"}</small></div>`).join(""));
+ $("skills").innerHTML=SK.map((s,i)=>{const v=1+Math.floor((S.done+S.urges)/(3+i*2));return`<div class="row sp" style="margin:4px 0"><span>${s[0]} ${s[1]}</span><b>Lv ${v}</b></div>`}).join("");
+ $("ach").innerHTML=ACH.map(a=>`<div class="item ${a[1]({...S,streak:d})?"":"lock"}" style="margin:5px 0;text-align:left">${a[1]({...S,streak:d})?"🏅":"🔒"} ${a[0]}</div>`).join("");
+ $("letters").innerHTML=NOTES.map((n,i)=>`<div class="letter card" onclick="rd(${i},this)" style="color:var(--ink)">${S.letters.includes(i)?`<div><b>${n[0]}</b><p>${n[1]}</p></div>`:`<span style="font-size:30px">✉️</span><b>${n[0]}</b>`}</div>`).join("")}
+function rd(i,el){if(!S.letters.includes(i)){S.letters.push(i);save();fx(["💌","✨"],8);gain(5,"Message unlocked +5 XP")}render()}
+function shareDay(){const d=days(),q=S.tasks.filter(t=>t.d).length,l=lvl(S.xp);
+ const txt=`Moonpetal Hollow report 🌙\nLevel ${l} hero (${S.xp} XP)\nQuests done today: ${q}/${S.tasks.length}\nNail streak: ${d} day${d==1?"":"s"} (best ${Math.max(S.best,d)})\nUrges resisted: ${S.urges}\nLetters opened: ${S.letters.length}/${NOTES.length}`;
+ if(navigator.share){navigator.share({text:txt}).catch(()=>{})}
+ else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast("Copied! Paste it into a message 🕊️"),()=>modal("<h2>Your report</h2><p style='white-space:pre-line'>"+txt+"</p>"))}
+ else modal("<h2>Your report</h2><p style='white-space:pre-line'>"+txt+"</p>")}
+// boot
+const D=new Date();$("date").textContent=D.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+const hr=D.getHours();$("greet").textContent=(hr<12?"Good morning, ":hr<18?"Good afternoon, ":"Good evening, ")+NAME+" ✨";
+$("daily").textContent=MSGS[(D.getDate()+D.getMonth())%MSGS.length];
+for(let i=0;i<40;i++){const s=document.createElement("div");s.className="star";s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s`;$("sky").appendChild(s)}
+$("tin").addEventListener("keydown",e=>{if(e.key==="Enter")addT()});
+if(S.lastDay!==today()){S.tasks.forEach(t=>t.d=0);S.lastDay=today();save()}
+render();
+setTimeout(()=>{if(Math.random()<.6){toast("🌷 A surprise flower bloomed while you were away.");fx(["🌷","🌸"],6)}},1200);
+if(Math.random()<.5){const s=document.createElement("div");s.className="secret";s.textContent=pick(["🧚","⭐","🍄"]);s.style.left=Math.random()*85+"vw";s.style.top=(20+Math.random()*60)+"vh";s.onclick=()=>{s.remove();gain(20,"You found a hidden sprite! +20 XP");fx(["✨"],10)};document.body.appendChild(s)}
+</script></body></html>
