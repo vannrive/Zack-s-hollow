@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Zack’s Moonpetal Hollow</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Moonpetal Hollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#2a1f4d;--bg2:#4a2f6e;--card:#fff3dc;--ink:#4b3358;--rose:#e87a9f;--gold:#f5c86a;--mint:#7ad6b0;box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Nunito,system-ui,sans-serif;color:#fff;background:radial-gradient(circle at 20% 0,#6b3f8f 0,transparent 50%),radial-gradient(circle at 90% 30%,#3a5a8f 0,transparent 45%),linear-gradient(var(--bg),#1b1436);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.cz{font-family:Cinzel,Georgia,serif;margin:0}
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:tw 3s infinite ease-in-out}
+@keyframes tw{50%{opacity:.2;transform:scale(.6)}}
+main{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:14px 14px 90px}
+.hero{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.logo{font-size:34px;filter:drop-shadow(0 0 8px var(--gold))}
+.hero h1{font-size:21px;color:var(--gold)}.hero small{opacity:.8;display:block}
+.card{background:var(--card);color:var(--ink);border-radius:18px;padding:14px;margin:12px 0;border:3px solid #d9b26b;box-shadow:0 6px 0 #a67c3a55,0 0 22px #f5c86a22;position:relative}
+.card h2{font-size:17px;margin-bottom:8px;color:#7a3f7f}
+.glass{background:#ffffff14;border:2px solid #ffffff30;border-radius:18px;padding:14px;margin:12px 0;backdrop-filter:blur(4px)}
+.bar{height:16px;background:#0003;border-radius:99px;overflow:hidden;border:2px solid #d9b26b}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .6s cubic-bezier(.2,1.4,.4,1)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:var(--rose);color:#fff;box-shadow:0 3px 0 #a94868;touch-action:manipulation;transition:transform .1s}
+button:active{transform:translateY(3px);box-shadow:none}
+button.alt{background:#7a6bd6;box-shadow:0 3px 0 #4b3fa0}button.gold{background:var(--gold);color:#5a3a10;box-shadow:0 3px 0 #b08a30}button.mint{background:var(--mint);color:#134b36;box-shadow:0 3px 0 #3f9d7c}
+input,select{font:inherit;padding:10px;border-radius:10px;border:2px solid #d9b26b;background:#fff;color:var(--ink);min-width:0}
+.pet{font-size:64px;display:inline-block;animation:bob 2.4s infinite ease-in-out;cursor:pointer;user-select:none}
+@keyframes bob{50%{transform:translateY(-8px) rotate(3deg)}}
+.pet.hop{animation:hop .6s}@keyframes hop{40%{transform:translateY(-30px) scale(1.2)}}
+.bubble{background:#fff;color:var(--ink);border-radius:14px;padding:8px 12px;flex:1;font-size:14px;min-width:150px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stat{background:#fff;border-radius:12px;padding:8px 4px}.stat b{display:block;font-size:22px;color:#c24f7a}.stat span{font-size:11px}
+.hand{display:flex;gap:6px;justify-content:center;align-items:flex-end;height:90px;margin:8px 0}
+.nail{width:36px;background:#ffd9c8;border-radius:16px 16px 8px 8px;position:relative;border:2px solid #e8a98f;transition:height .8s}
+.nail:after{content:"";position:absolute;left:5px;right:5px;top:0;height:var(--n,10px);background:#ffc0d4;border-radius:10px 10px 4px 4px;transition:height .8s}
+.task{display:flex;align-items:center;gap:10px;padding:10px;background:#fff;border-radius:12px;margin:6px 0;transition:.3s}
+.task.done{opacity:.55;text-decoration:line-through;background:#e9ffe9}
+.task.pop{animation:pop .5s}@keyframes pop{40%{transform:scale(1.06);box-shadow:0 0 20px var(--gold)}}
+.chk{width:28px;height:28px;border-radius:50%;border:3px solid #d9b26b;background:#fff;padding:0;box-shadow:none;color:#fff;font-size:16px}
+.done .chk{background:var(--mint);border-color:var(--mint)}
+.xpb{margin-left:auto;font-size:12px;font-weight:800;color:#c24f7a;white-space:nowrap}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;background:#1b1436ee;border-top:3px solid #d9b26b;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border-radius:0;background:none;box-shadow:none;padding:12px 2px;font-size:12px;color:#fff9}
+nav button.on{color:var(--gold);background:#ffffff14}
+.tab{display:none}.tab.on{display:block;animation:fade .4s}@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.item{background:#fff;border-radius:14px;padding:10px;text-align:center;font-size:13px}
+.item .big{font-size:42px;display:block}.lock{filter:grayscale(1);opacity:.45}
+.bq{font-size:44px;animation:sway 3s infinite ease-in-out;display:block}@keyframes sway{50%{transform:rotate(-5deg) scale(1.05)}}
+.glow{animation:glow 2s infinite}@keyframes glow{50%{filter:drop-shadow(0 0 12px var(--gold))}}
+.letter{cursor:pointer;display:flex;gap:10px;align-items:center;background:#fff;padding:12px;border-radius:12px;margin:8px 0}
+.letter.open{background:#fff8d6;display:block}
+#toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translate(-50%,-150%);background:var(--card);color:var(--ink);border:3px solid var(--gold);border-radius:16px;padding:12px 16px;z-index:20;max-width:90vw;text-align:center;transition:transform .4s cubic-bezier(.2,1.5,.4,1);font-weight:700}
+#toast.show{transform:translate(-50%,0)}
+.fx{position:fixed;z-index:15;pointer-events:none;font-size:26px;animation:fly 1.6s forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(360deg);opacity:0}}
+#modal{position:fixed;inset:0;background:#000a;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
+#modal.on{display:flex}#modal .card{max-width:380px;text-align:center;animation:pop .5s}
+.secret{position:fixed;font-size:22px;z-index:4;cursor:pointer;animation:tw 2s infinite}
+nav:not(.top){display:none}nav.top{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;left:auto;right:auto;border:3px solid #d9b26b;border-radius:16px;overflow:hidden;padding:0;margin:0 0 6px}nav.top button{padding:8px 2px;font-size:12px}
+a{color:inherit}
+</style></head><body>
+<div id="sky"></div><div id="toast"></div><div id="modal" onclick="this.classList.remove('on')"><div class="card"
