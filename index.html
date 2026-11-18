@@ -1,7 +1,12 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Zack’s Moonpetal Hollow</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Moonpetal Hollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#2a1f4d">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-180.png">
+ <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#2a1f4d;--bg2:#4a2f6e;--card:#fff3dc;--ink:#4b3358;--rose:#e87a9f;--gold:#f5c86a;--mint:#7ad6b0;box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -100,7 +105,7 @@ a{color:inherit}
 </section>
 
 <section class="tab" id="t3">
-<div class="glass"><h2 class="cz">🏮 The Cozy Inn</h2><p style="margin:6px 0 0">Someone left messages for you. One daily. Tap to read.</p></div>
+<div class="glass"><h2 class="cz">🏮 The Cozy Inn</h2><p style="margin:6px 0 0">A new letter arrives each day. Tap to read.</p></div>
 <div id="letters"></div>
 </section>
 
@@ -113,7 +118,7 @@ a{color:inherit}
 </main>
 
 <script>
-// ===== EDIT ME: name and love notes =====
+// ===== EDIT ME: name and love notes (one unlocks per day, in order) =====
 const NAME="Zack";
 const NOTES=[
 ["A gilded letter has arrived","Zack, you are as beautiful as The Kiss by Klimt: all gold, all warmth, and impossible to look away from."],["A mysterious letter has arrived","You are doing better than you think. I’m proud of you, always."],
@@ -121,7 +126,21 @@ const NOTES=[
 ["You found something in your inventory","A coupon for one very long hug. No expiration date."],
 ["A raven delivered this","Hard day? You still showed up. That’s legendary."],
 ["Tucked inside a glowing bottle","Plot twist: you are the main character and the best support class."],
-["A pressed flower fell out of a book","For absolutely no reason other than you being you."]];
+["A pressed flower fell out of a book","For absolutely no reason other than you being you."],
+["A raven arrives before sunrise","Good morning, hero. You have survived every hard day so far, which is a perfect record."],
+["A note tucked under your mug","You are allowed to rest. Even legendary heroes sit by the fire and do absolutely nothing."],
+["Found in the pocket of an old cloak","Reminder: you are funny, kind, and a little bit ridiculous in the best way."],
+["A scroll from the Gilded Hall","The walls of the hall glow a bit brighter whenever someone thinks of you. It has been very bright lately."],
+["Slipped under the door of the inn","Plot twist: you are doing a great job. No notes. Please enjoy a snack."],
+["A message in a bottle washed ashore","Somewhere out there, someone is smiling because of you. The bottle was delivered by a very happy raven."],
+["A page torn from Marigold’s journal","Entry: the hero seemed tired today. Fed the fire, made the stew, kept the door open. Some days that is the whole job."],
+["A pressed leaf, golden at the edges","You do not have to be productive to be worth something. You are already the treasure."],
+["Carried in by a very proud fox","Pip asked me to pass on: sorry about the muddy paw prints, but not sorry about the snuggles."],
+["The Stranger left this behind","One tiny quest for today: breathe slowly three times. Reward: 100% more calm. No XP, only vibes."],
+["A letter that smells like rain","The days when you feel like you did nothing are still days you got through. That counts as a win."],
+["Pinned to the Moonpetal Tree","A new blossom opened this morning, and it looked a little like you: stubborn, glowing, and unreasonably lovely."],
+["A telegram from Nibblax","I have been told to stay away from your fingernails. I am sulking. Please send snacks, not nibbles."],
+["Handed over by Fenwick","He says one good deed earns one bottle of sunshine. I paid in advance, so you have a whole crate."]];
 const MSGS=["Today’s side quest: be gentle with yourself.","Small steps still count as XP.","You are the rare drop of my whole life.","Hydrate, hero. Your health bar thanks you.","Critical hit of kindness incoming: you’re wonderful.","Even the strongest mages take rest breaks."];
 const GOBLIN=["Hands detected approaching the mouth. Deploying emotional support.","The nail goblin has been defeated.","+10 XP for resisting the forbidden nibble.","The urge was strong. You were stronger.","Nail goblin retreats, muttering about unfair odds.","A wild craving appeared! It used Nibble. It missed!"];
 const ALMOST=["Close call! Effort counts. +5 XP for noticing.","Hand intercepted mid-air. Excellent reflexes.","Almost is progress. The goblin is nervous."];
@@ -174,6 +193,8 @@ const key="moonpetal-v2";
 let S={xp:0,done:0,urges:0,best:0,start:today(),tasks:START_QUESTS.map(q=>({t:q[0],x:q[1],d:0})),inv:[],letters:[],lastDay:today(),found:0};
 try{const l=JSON.parse(localStorage.getItem(key));if(l)S=l}catch(e){}
 S.bites=S.bites||[];if(!S.pz||S.pz.d!==today())S.pz={d:today(),ok:false,n:0,h:false};
+if(!S.ld)S.ld={d:today(),n:Math.max(2,Math.max(-1,...S.letters)+1)};
+{const e=Math.round((new Date(today())-new Date(S.ld.d))/864e5);if(e>0){S.ld.n=Math.min(NOTES.length,S.ld.n+e);S.ld.d=today()}}
 function save(){try{localStorage.setItem(key,JSON.stringify(S))}catch(e){}}
 function today(){return new Date().toDateString()}
 function days(){return Math.max(0,Math.floor((new Date(today())-new Date(S.start))/864e5))}
@@ -209,7 +230,7 @@ function render(){
  $("skills").innerHTML=SK.map((s,i)=>{const v=1+Math.floor((S.done+S.urges)/(3+i*2));return`<div class="row sp" style="margin:4px 0"><span>${s[0]} ${s[1]}</span><b>Lv ${v}</b></div>`}).join("");
  $("ach").innerHTML=ACH.map(a=>`<div class="item ${a[1]({...S,streak:d})?"":"lock"}" style="margin:5px 0;text-align:left">${a[1]({...S,streak:d})?"🏅":"🔒"} ${a[0]}</div>`).join("");
  renderLore();renderPz();renderBites();
- $("letters").innerHTML=NOTES.map((n,i)=>`<div class="letter card" onclick="rd(${i},this)" style="color:var(--ink)">${S.letters.includes(i)?`<div><b>${n[0]}</b><p>${n[1]}</p></div>`:`<span style="font-size:30px">✉️</span><b>${n[0]}</b>`}</div>`).join("")}
+ $("letters").innerHTML=NOTES.map((n,i)=>i>=S.ld.n&&!S.letters.includes(i)?"":`<div class="letter card" onclick="rd(${i},this)" style="color:var(--ink)">${S.letters.includes(i)?`<div><b>${n[0]}</b><p>${n[1]}</p></div>`:`<span style="font-size:30px">✉️</span><b>${n[0]}</b>`}</div>`).join("")+(S.ld.n<NOTES.length?'<div class="glass" style="text-align:center">✉️ '+(NOTES.length-S.ld.n)+' more letter'+(NOTES.length-S.ld.n==1?' is':'s are')+' on the way. A new one arrives each day.</div>':'')}
 function renderLore(){const L=lvl(S.xp),dd=new Date(),doy=Math.floor((dd-new Date(dd.getFullYear(),0,0))/864e5);
  $('chron').textContent=DAILY[doy%DAILY.length];
  $('cast').innerHTML=CAST.map(c=>{const o=L>=c[3];return `<div class="item ${o?'':'lock'}" style="text-align:left"><span class="big" style="font-size:34px">${c[0]}</span><b>${c[1]}</b><br><small>${o?c[2][doy%c[2].length]:'Arrives at Level '+c[3]}</small></div>`}).join('');
@@ -229,7 +250,7 @@ function solve(){if(S.pz.ok)return;const v=norm($('pza').value);if(!v)return;con
 function hint(){S.pz.h=true;save();renderPz()}
 function rd(i,el){if(!S.letters.includes(i)){S.letters.push(i);save();fx(["💌","✨"],8);gain(5,"Message unlocked +5 XP")}render()}
 function shareDay(){const d=days(),q=S.tasks.filter(t=>t.d).length,l=lvl(S.xp);
- const txt=`Moonpetal Hollow report 🌙\nLevel ${l} hero (${S.xp} XP)\nQuests done today: ${q}/${S.tasks.length}\nNail streak: ${d} day${d==1?"":"s"} (best ${Math.max(S.best,d)})\nUrges resisted: ${S.urges}\nLetters opened: ${S.letters.length}/${NOTES.length}`;
+ const txt=`Moonpetal Hollow report 🌙\nLevel ${l} hero (${S.xp} XP)\nQuests done today: ${q}/${S.tasks.length}\nNail streak: ${d} day${d==1?"":"s"} (best ${Math.max(S.best,d)})\nUrges resisted: ${S.urges}\nLetters opened: ${S.letters.length}/${S.ld.n}`;
  if(navigator.share){navigator.share({text:txt}).catch(()=>{})}
  else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast("Copied! Paste it into a message 🕊️"),()=>modal("<h2>Your report</h2><p style='white-space:pre-line'>"+txt+"</p>"))}
  else modal("<h2>Your report</h2><p style='white-space:pre-line'>"+txt+"</p>")}
