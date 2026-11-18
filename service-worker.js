@@ -1,4 +1,4 @@
-const CACHE_NAME = "moonpetal-hollow-v1";
+const CACHE_NAME = "moonpetal-hollow-v2";
 
 const FILES = [
   "./",
