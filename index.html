@@ -116,7 +116,12 @@ a{color:inherit}
 <div id="chap"></div>
 </section>
 </main>
-
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch(error => console.log("Hollow registration:", error));
+  });
+}
 <script>
 // ===== EDIT ME: name and love notes (one unlocks per day, in order) =====
 const NAME="Zack";
