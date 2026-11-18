@@ -77,7 +77,8 @@ a{color:inherit}
 <div class="stats"><div class="stat"><b id="streak">0</b><span>days protected</span></div><div class="stat"><b id="best">0</b><span>best streak</span></div><div class="stat"><b id="urges">0</b><span>urges resisted</span></div></div>
 <div class="hand" id="hand"></div>
 <p id="mile" style="text-align:center;font-size:13px;margin:0 0 10px"></p>
-<div class="row"><button class="mint" onclick="resist()">🛡️ I resisted!</button><button class="alt" onclick="almost()">😅 I almost bit them</button><button class="gold" onclick="bit()">🌱 Fresh start</button></div></div>
+<p id="bitemsg" style="text-align:center;font-size:13px;margin:0 0 10px;opacity:.85"></p>
+<div class="row"><button class="mint" onclick="resist()">🛡️ I resisted!</button><button class="alt" onclick="almost()">😅 I almost bit them</button><button class="gold" onclick="bit()">🌱 I bit them (fresh start)</button></div></div>
 
 <div class="card"><h2>📜 Today’s Quests</h2><div id="tasks"></div>
 <div class="row" style="margin-top:8px"><input id="tin" placeholder="New quest (e.g. Do laundry)" style="flex:1"><select id="txp"><option value="10">+10</option><option value="20" selected>+20</option><option value="30">+30</option></select><button onclick="addT()">Add</button></div></div>
@@ -99,12 +100,13 @@ a{color:inherit}
 </section>
 
 <section class="tab" id="t3">
-<div class="glass"><h2 class="cz">🏮 The Cozy Inn</h2><p style="margin:6px 0 0">Someone left messages for you. Tap to read.</p></div>
+<div class="glass"><h2 class="cz">🏮 The Cozy Inn</h2><p style="margin:6px 0 0">Someone left messages for you. One daily. Tap to read.</p></div>
 <div id="letters"></div>
 </section>
 
 <section class="tab" id="t4">
 <div class="glass"><h2 class="cz">📖 Today in the Hollow</h2><p id="chron" style="margin:6px 0 0"></p></div>
+<div class="card"><h2>🧩 Marigold’s Daily Riddle</h2><p id="pzq" style="margin:0 0 10px"></p><div class="row"><input id="pza" placeholder="Your answer" style="flex:1"><button onclick="solve()">Guess</button></div><div class="row" style="margin-top:8px"><button class="alt" onclick="hint()">💡 Hint</button><span id="pzs" style="font-size:13px"></span></div></div>
 <div class="card"><h2>🏮 Residents of the Hollow</h2><div class="grid" id="cast"></div></div>
 <div id="chap"></div>
 </section>
@@ -151,10 +153,27 @@ const CAST=[
 ['🌫️','The Stranger in the Cloak',['The Stranger left a single golden leaf on your table.','The Stranger watched from the corner, smiling, and left before you noticed.','The Stranger is rumored to be very fond of you.'],5]];
 // ===== EDIT ME: one tale per day, cycling =====
 const DAILY=['Today the Hollow smells like cinnamon and rain on stone.','Nibblax was seen sulking behind a mushroom. He lost another round yesterday.','A glowing moth landed on the inn’s sign and refused to leave.','The Moonpetal Tree dropped a petal on the doorstep. It looks like it was meant for you.','Marigold hung fresh lanterns in your honor. She says it is a coincidence.','Pip spent the morning chasing a sunbeam and lost with great dignity.','A soft wind carried a melody from the Gilded Hall. Nobody could name the song.','The villagers held a small meeting about how well you are doing. It was unanimous.'];
+// ===== EDIT ME: daily puzzles (prompt, accepted answers in lowercase, hint). One per day, cycling =====
+const PUZZLES=[
+['I have no voice, yet I whisper to the fire. I have no wings, yet I rise up the chimney. What am I?',['smoke'],'It rises from the hearth.'],
+['Unscramble this Hollow word: LNTERAN',['lantern'],'It lights the paths at night.'],
+['The more of me you take, the more you leave behind. What am I?',['footsteps','footstep','steps'],'Think about walking.'],
+['Unscramble this Hollow word: LAPET',['petal','petals'],'The Moonpetal Tree drops them.'],
+['I am always coming but never arrive. What am I?',['tomorrow'],'Not today, but soon.'],
+['I have cities with no houses, forests with no trees, and water with no fish. What am I?',['map'],'Fenwick sells these.'],
+['Unscramble this Hollow word: NILGOB',['goblin'],'Nibblax is one.'],
+['What gets wetter the more it dries?',['towel'],'Marigold hangs one by the fire.'],
+['Unscramble this Hollow word: DNELOG',['golden','gold'],'The color of the Gilded Hall.'],
+['I shine without a flame and guide without a voice. I am full, then half, then gone. What am I?',['moon'],'You can see me over the Hollow tonight.'],
+['Unscramble this Hollow word: TEUQBUO',['bouquet'],'A gift of flowers.'],
+['I get bigger the more you take away from me. What am I?',['hole'],'Check the Hollow’s name for a clue.'],
+['Unscramble this Hollow word: DLOGIRAM',['marigold'],'She keeps the inn.'],
+['What has hands but cannot clap?',['clock','watch'],'It keeps time in the inn.']];
 const $=id=>document.getElementById(id);
 const key="moonpetal-v2";
 let S={xp:0,done:0,urges:0,best:0,start:today(),tasks:START_QUESTS.map(q=>({t:q[0],x:q[1],d:0})),inv:[],letters:[],lastDay:today(),found:0};
 try{const l=JSON.parse(localStorage.getItem(key));if(l)S=l}catch(e){}
+S.bites=S.bites||[];if(!S.pz||S.pz.d!==today())S.pz={d:today(),ok:false,n:0,h:false};
 function save(){try{localStorage.setItem(key,JSON.stringify(S))}catch(e){}}
 function today(){return new Date().toDateString()}
 function days(){return Math.max(0,Math.floor((new Date(today())-new Date(S.start))/864e5))}
@@ -168,7 +187,7 @@ function gain(x,msg){const a=lvl(S.xp);S.xp+=x;const b=lvl(S.xp);save();render()
 function tab(i){document.querySelectorAll(".tab").forEach((t,j)=>t.classList.toggle("on",i==j));document.querySelectorAll("nav.top button").forEach((x,j)=>x.classList.toggle("on",j==i));scrollTo(0,0)}
 function resist(){S.urges++;gain(10,pick(GOBLIN));fx(["🛡️","✨","💪"],8)}
 function almost(){S.urges++;gain(5,pick(ALMOST))}
-function bit(){S.best=Math.max(S.best,days());S.start=today();save();render();toast("Every hero has setbacks. Fresh start, fresh XP, no judgment. 💗")}
+function bit(){S.bites.push(Date.now());S.best=Math.max(S.best,days());S.start=today();save();render();toast("Every hero has setbacks. Fresh start, fresh XP, no judgment. 💗")}
 function addT(){const v=$("tin").value.trim();if(!v)return;S.tasks.push({t:v,x:+$("txp").value,d:0});$("tin").value="";save();render()}
 function tog(i){const t=S.tasks[i];if(t.d)return;t.d=1;S.done++;save();gain(t.x,`Quest complete! +${t.x} XP`);fx(["✨","⭐","💖"],10);
  if(S.tasks.every(x=>x.d)){setTimeout(()=>{fx(["🎉","🌸","⭐","💐"],30);modal('<div style="font-size:60px">🏆</div><h2>All Quests Complete!</h2><p>Critical success! Today’s tasks are all done. Go enjoy a snack, hero.</p>')},400);gain(25,"Daily bonus +25 XP")}
@@ -189,12 +208,25 @@ function render(){
  R.forEach((g,gi)=>$("r"+gi).innerHTML=g.map(r=>`<div class="item ${lvl(S.xp)<r[2]?"lock":""}"><span class="big">${r[0]}</span>${r[1]}<br><small>${lvl(S.xp)<r[2]?"Unlocks Lv "+r[2]:"Owned!"}</small></div>`).join(""));
  $("skills").innerHTML=SK.map((s,i)=>{const v=1+Math.floor((S.done+S.urges)/(3+i*2));return`<div class="row sp" style="margin:4px 0"><span>${s[0]} ${s[1]}</span><b>Lv ${v}</b></div>`}).join("");
  $("ach").innerHTML=ACH.map(a=>`<div class="item ${a[1]({...S,streak:d})?"":"lock"}" style="margin:5px 0;text-align:left">${a[1]({...S,streak:d})?"🏅":"🔒"} ${a[0]}</div>`).join("");
- renderLore();
+ renderLore();renderPz();renderBites();
  $("letters").innerHTML=NOTES.map((n,i)=>`<div class="letter card" onclick="rd(${i},this)" style="color:var(--ink)">${S.letters.includes(i)?`<div><b>${n[0]}</b><p>${n[1]}</p></div>`:`<span style="font-size:30px">✉️</span><b>${n[0]}</b>`}</div>`).join("")}
 function renderLore(){const L=lvl(S.xp),dd=new Date(),doy=Math.floor((dd-new Date(dd.getFullYear(),0,0))/864e5);
  $('chron').textContent=DAILY[doy%DAILY.length];
  $('cast').innerHTML=CAST.map(c=>{const o=L>=c[3];return `<div class="item ${o?'':'lock'}" style="text-align:left"><span class="big" style="font-size:34px">${c[0]}</span><b>${c[1]}</b><br><small>${o?c[2][doy%c[2].length]:'Arrives at Level '+c[3]}</small></div>`}).join('');
  $('chap').innerHTML=LORE.map((c,i)=>{const o=L>=i+1;return `<div class="card" style="${o?'':'opacity:.5'}"><h2>${o?'📖':'🔒'} Chapter ${i+1}: ${o?c[0]:'Unlocks at Level '+(i+1)}</h2>${o?`<p style="margin:0;line-height:1.5">${c[1]}</p>`:''}</div>`}).join('')}
+function renderBites(){const now=Date.now(),W=6048e5,tw=S.bites.filter(t=>now-t<W).length,lw=S.bites.filter(t=>now-t>=W&&now-t<2*W).length,tot=S.bites.length,d=days();
+ let m=tot?`Bites logged: ${tot} total, ${tw} this week. `:'No bites logged yet. Every good day counts. ';
+ if(tot){m+=tw<lw?`That is ${lw-tw} fewer than last week 🌟 `:tw>lw?'A bumpier week. Every day is a fresh start 💗 ':'Steady as the moon 🌙 '}
+ m+=`${d} good day${d==1?'':'s'} in a row.`;$('bitemsg').textContent=m}
+function pzIdx(){const dd=new Date();return Math.floor((dd-new Date(dd.getFullYear(),0,0))/864e5)%PUZZLES.length}
+function norm(s){return s.toLowerCase().replace(/[^a-z ]/g,'').replace(/^(a|an|the) /,'').trim()}
+function renderPz(){if(S.pz.d!==today())S.pz={d:today(),ok:false,n:0,h:false};const p=PUZZLES[pzIdx()];
+ $('pzq').textContent=p[0]+(S.pz.h?' Hint: '+p[2]:'');
+ $('pzs').textContent=S.pz.ok?'✅ Solved today! Come back tomorrow.':(S.pz.n?'Not quite. Try again!':'');$('pza').disabled=S.pz.ok}
+function solve(){if(S.pz.ok)return;const v=norm($('pza').value);if(!v)return;const p=PUZZLES[pzIdx()];
+ if(p[1].includes(v)){S.pz.ok=true;save();fx(['🧩','✨','⭐'],14);gain(S.pz.h?15:25,S.pz.h?'Riddle solved! +15 XP':'Riddle solved with no hint! +25 XP')}
+ else{S.pz.n++;save();toast('Not quite. Marigold chuckles and tells you to try again. 🕯️');renderPz()}}
+function hint(){S.pz.h=true;save();renderPz()}
 function rd(i,el){if(!S.letters.includes(i)){S.letters.push(i);save();fx(["💌","✨"],8);gain(5,"Message unlocked +5 XP")}render()}
 function shareDay(){const d=days(),q=S.tasks.filter(t=>t.d).length,l=lvl(S.xp);
  const txt=`Moonpetal Hollow report 🌙\nLevel ${l} hero (${S.xp} XP)\nQuests done today: ${q}/${S.tasks.length}\nNail streak: ${d} day${d==1?"":"s"} (best ${Math.max(S.best,d)})\nUrges resisted: ${S.urges}\nLetters opened: ${S.letters.length}/${NOTES.length}`;
